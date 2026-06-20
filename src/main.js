@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT;
+const connectDB = require('../config/db');
 
 const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
@@ -18,5 +19,6 @@ app.use('/users', userRoutes);
 
 
 app.listen(PORT, () => {
+  connectDB();
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
