@@ -25,12 +25,16 @@ services:
     
   api:
     build: ./
+    command: sh -c "npm install -g nodemon && nodemon src/main.js"
     ports: 
       - 4001:3005
     env_file: .env
     environment:
       PORT: 3005
       MONGO_URL: mongodb://admin:admin1234@mongodb:27017/myapp?authSource=admin
+    volumes:
+      - ./:/app
+      - /app/node_modules
     depends_on:
       mongodb:
         condition: service_healthy

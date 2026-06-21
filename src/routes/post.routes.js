@@ -4,9 +4,9 @@ const validateSchema = require("../middlewares/validateSchema");
 const upload = require("../middlewares/upload");
 const router = Router();
 
-// router.get("/", postController.getAll);
-// router.get("/:id", validateSchema(idParamSchema, "params"), postController.getById);
-// router.post("/", postController.create);
+router.get("/", postController.getAll);
+router.get("/:id", postController.getById);
+router.post("/:nickname", postController.create);
 // router.put("/:id", validateSchema(idParamSchema, "params"), postController.update);
 // router.delete("/:id", validateSchema(idParamSchema, "params"), postController.remove);
 

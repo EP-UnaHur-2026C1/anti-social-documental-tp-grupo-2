@@ -6,8 +6,8 @@ const router = Router();
 router.get("/", userController.getAll);
 router.get("/:nickname", userController.getByNickname);
 router.post("/", userController.create);
-// router.delete("/:nickname", userController.remove);
-// router.put("/:nickname", userController.update);
+router.delete("/:nickname", userController.remove);
+router.put("/:nickname", userController.update);
 
 // // -- Rutas para followers --
 

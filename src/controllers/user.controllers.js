@@ -1,4 +1,4 @@
-const User = require("../../models/user");
+const User = require("../../models/User");
 
 const getAll = async (req, res) => {
   try {
@@ -37,7 +37,8 @@ const create = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const user = await User.find({})
+    const {nickname} = req.params
+    const user = await User.findOneAndDelete({nickname})
     res.status(200).json(user);
   } catch(e) {
     console.error(e);
@@ -45,8 +46,20 @@ const remove = async (req, res) => {
   }
 }
 
+const update = async (req, res) => {
+  try {
+    const {nickname, email, password} = req.body;
+    const user = await User.findOneAndUpdate({nickname}, {nickname, email, password})
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({error: "Error al actualizar al usuario"})
+  }
+}
+
 module.exports = {
   getAll,
   getByNickname,
-  create
+  create,
+  update,
+  remove
 }
