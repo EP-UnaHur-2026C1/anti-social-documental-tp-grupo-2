@@ -46,6 +46,7 @@ const remove = async(req, res) => {
     try {
         const {id} = req.params
         await Post.findByIdAndDelete(id)
+        // Falta hacer que elimine sus comnetarios asociados
     } catch (e) {
         console.error(e);
         res.status(500).json({e: "Error al remover el usuario"})
@@ -60,6 +61,17 @@ const update = async(req, res) => {
     } catch(e) {
         console.error(e);
         res.status(500).json({error: "Error al actualizar el post"})
+    }
+}
+
+// Pendientes 
+
+const addImage = async(req, res) => {
+    try {
+
+    } catch(e) {
+        console.error(e);
+        res.status(500).json({e: "Error al asociar imágen al post"})
     }
 }
 
