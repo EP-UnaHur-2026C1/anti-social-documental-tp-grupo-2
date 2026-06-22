@@ -14,15 +14,12 @@ const getAll = async (req, res) => {
 // GET /tags/:id  — incluye los posts asociados
 const getById = async (req, res) => {
   try {
-    const tag = await Tag.findById(req.params.id);
-    if (!tag) return res.status(404).json({ error: 'Tag no encontrado' });
- 
-    const posts = await Post.find({ tags: tag._id }, 'description publishedAt');
-    res.status(200).json({ ...tag.toObject(), posts });
-  } catch (e) {
+    const posts = await Post.find({ tags: req.tag._id }, 'description publishedAt');
+    res.status(200).json({ ...req.tag.toObject(), posts });
+  } catch(e) {
     res.status(500).json({ error: e.message });
   }
-};
+}
  
 // POST /tags
 const create = async (req, res) => {
@@ -38,13 +35,9 @@ const create = async (req, res) => {
 // PUT /tags/:id
 const update = async (req, res) => {
   try {
-    const tag = await Tag.findByIdAndUpdate(
-      req.params.id,
-      { name: req.body.name },
-      { new: true, runValidators: true }
-    );
-    if (!tag) return res.status(404).json({ error: 'Tag no encontrado' });
-    res.status(200).json(tag);
+    Object.assign(req.tag, { name: req.body.name });
+    await req.tag.save();
+    res.status(200).json(req.tag);
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'El nombre del tag ya existe' });
     res.status(500).json({ error: e.message });
@@ -54,10 +47,9 @@ const update = async (req, res) => {
 // DELETE /tags/:id
 const remove = async (req, res) => {
   try {
-    const tag = await Tag.findByIdAndDelete(req.params.id);
-    if (!tag) return res.status(404).json({ error: 'Tag no encontrado' });
+    await Tag.findByIdAndDelete(req.tag._id);
     // Desasociar el tag de todos los posts que lo tengan
-    await Post.updateMany({ tags: tag._id }, { $pull: { tags: tag._id } });
+    await Post.updateMany({ tags: req.tag._id }, { $pull: { tags: req.tag._id } });
     res.status(204).send();
   } catch (e) {
     res.status(500).json({ error: e.message });

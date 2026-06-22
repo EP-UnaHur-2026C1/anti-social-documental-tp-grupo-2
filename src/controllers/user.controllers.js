@@ -16,9 +16,8 @@ const getAll = async (req, res) => {
 // GET /users/:nickname
 const getByNickname = async (req, res) => {
   try {
-    const user = await User.findOne({ nickname: req.params.nickname }, '-password');
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-    res.status(200).json(user);
+    const { password, ...userWithoutPassword } = req.user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -40,13 +39,10 @@ const create = async (req, res) => {
 // PUT /users/:nickname
 const update = async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(
-      { nickname: req.params.nickname },
-      req.body,
-      { new: true, runValidators: true, projection: '-password' }
-    );
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-    res.status(200).json(user);
+    Object.assign(req.user, req.body);
+    await req.user.save();
+    const { password, ...userWithoutPassword } = req.user.toObject();
+    res.status(200).json(userWithoutPassword);
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'El nickname o email ya está en uso' });
     res.status(500).json({ error: e.message });
@@ -56,8 +52,7 @@ const update = async (req, res) => {
 // DELETE /users/:nickname
 const remove = async (req, res) => {
   try {
-    const user = await User.findOneAndDelete({ nickname: req.params.nickname });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    await User.deleteOne({ _id: req.user._id });
     res.status(204).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -67,16 +62,10 @@ const remove = async (req, res) => {
 // POST /users/:nickname/following/:followedNickname
 const follow = async (req, res) => {
   try {
-    const follower = await User.findOne({ nickname: req.params.nickname });
-    if (!follower) return res.status(404).json({ error: 'Usuario seguidor no encontrado' });
- 
-    const followed = await User.findOne({ nickname: req.params.followedNickname });
-    if (!followed) return res.status(404).json({ error: 'Usuario a seguir no encontrado' });
- 
-    if (follower._id.equals(followed._id))
+    if (req.user._id.equals(req.followed._id))
       return res.status(400).json({ error: 'Un usuario no puede seguirse a sí mismo' });
- 
-    const relation = await Follow.create({ followerId: follower._id, followedId: followed._id });
+
+    const relation = await Follow.create({ followerId: req.user._id, followedId: req.followed._id });
     res.status(201).json(relation);
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'Ya seguís a este usuario' });
@@ -87,15 +76,8 @@ const follow = async (req, res) => {
 // DELETE /users/:nickname/following/:followedNickname
 const unfollow = async (req, res) => {
   try {
-    const follower = await User.findOne({ nickname: req.params.nickname });
-    if (!follower) return res.status(404).json({ error: 'Usuario no encontrado' });
- 
-    const followed = await User.findOne({ nickname: req.params.followedNickname });
-    if (!followed) return res.status(404).json({ error: 'Usuario no encontrado' });
- 
-    const deleted = await Follow.findOneAndDelete({ followerId: follower._id, followedId: followed._id });
+    const deleted = await Follow.findOneAndDelete({ followerId: req.user._id, followedId: req.followed._id });
     if (!deleted) return res.status(404).json({ error: 'No seguís a este usuario' });
- 
     res.status(204).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -105,10 +87,7 @@ const unfollow = async (req, res) => {
 // GET /users/:nickname/followers
 const getFollowers = async (req, res) => {
   try {
-    const user = await User.findOne({ nickname: req.params.nickname });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
- 
-    const follows = await Follow.find({ followedId: user._id }).populate('followerId', '-password');
+    const follows = await Follow.find({ followedId: req.user._id }).populate('followerId', '-password');
     res.status(200).json(follows.map(f => f.followerId));
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -118,10 +97,7 @@ const getFollowers = async (req, res) => {
 // GET /users/:nickname/following
 const getFollowing = async (req, res) => {
   try {
-    const user = await User.findOne({ nickname: req.params.nickname });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
- 
-    const follows = await Follow.find({ followerId: user._id }).populate('followedId', '-password');
+    const follows = await Follow.find({ followerId: req.user._id }).populate('followedId', '-password');
     res.status(200).json(follows.map(f => f.followedId));
   } catch (e) {
     res.status(500).json({ error: e.message });
