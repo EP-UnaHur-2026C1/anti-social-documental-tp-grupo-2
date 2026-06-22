@@ -1,26 +1,18 @@
 const { Router } = require("express");
 const userController = require("../controllers/user.controllers");
 const validateSchema = require("../middlewares/validateSchema");
+const { userSchema, userUpdateSchema } = require('../schemas/userSchema');
 const router = Router();
 
 router.get("/", userController.getAll);
 router.get("/:nickname", userController.getByNickname);
-router.post("/", userController.create);
+router.post("/", validateSchema(userSchema), userController.create);
 router.delete("/:nickname", userController.remove);
-router.put("/:nickname", userController.update);
+router.put("/:nickname", validateSchema(userUpdateSchema), userController.update);
 
-// // -- Rutas para followers --
-
-// // Obtener seguidores de un usuario
-// router.get("/:nickname/followers", userController.getFollowers);
-
-// // Obtener seguidos por un usuario
-// router.get("/:nickname/following", userController.getFollowing);
-
-// // Seguir a un usuario
-// router.post("/:nickname/following/:followedId", validateSchema(userFollowParamSchema, "params"), userController.follow);
-
-// // Dejar de seguir a un usuario.
-// router.delete("/:nickname/following/:followedId", validateSchema(userFollowParamSchema, "params"), userController.unfollow);
+router.get('/:nickname/followers', userController.getFollowers);
+router.get('/:nickname/following', userController.getFollowing);
+router.post('/:nickname/following/:followedNickname', userController.follow);
+router.delete('/:nickname/following/:followedNickname', userController.unfollow);
 
 module.exports = router;
