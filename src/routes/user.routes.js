@@ -11,7 +11,7 @@ router.post("/", validateSchema(userSchema), userController.create);
 router.delete("/:nickname", validateUserExists, userController.remove);
 router.put("/:nickname", validateUserExists, validateSchema(userUpdateSchema), userController.update);
 
-// Ver seguidores y seguidos
+// Ver seguidores
 router.get('/:nickname/followers', validateUserExists, userController.getFollowers);
 router.get('/:nickname/following', validateUserExists, userController.getFollowing);
 

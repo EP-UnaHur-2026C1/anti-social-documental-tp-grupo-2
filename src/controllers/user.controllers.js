@@ -26,8 +26,8 @@ const getByNickname = async (req, res) => {
 // POST /users
 const create = async (req, res) => {
   try {
-    const { nickname, name, email, password } = req.body;
-    const user = await User.create({ nickname, name, email, password });
+    const { nickname, email, password } = req.body;
+    const user = await User.create({ nickname, email, password });
     const { password: _, ...userWithoutPassword } = user.toObject();
     res.status(201).json(userWithoutPassword);
   } catch (e) {
