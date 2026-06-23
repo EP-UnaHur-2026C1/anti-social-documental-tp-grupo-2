@@ -60,12 +60,6 @@ const validateImageExists = async (req, res, next) => {
   }
 };
 
-const validateImageUrl = async (req, res, next) => {
-  const url = req.body.url;
-  if (!url) return res.status(400).json({ error: 'Se requiere una URL de imagen' });
-  next();
-};
-
 const validateTagExists = async (req, res, next) => {
   try {
     const tag = await Tag.findById(req.params.tagId || req.body.tagId);

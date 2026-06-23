@@ -13,7 +13,7 @@ router.put("/:id", validatePostExists, validateSchema(postUpdateSchema), postCon
 router.delete("/:id", validatePostExists, postController.remove);
 
 // Imágenes
-router.post('/:id/images', validatePostExists, validateImageUrl, postController.addImage);
+router.post('/:id/images', validatePostExists, upload.single('image'), postController.addImage);
 router.delete('/:id/images/:imageId', validatePostExists, validateImageExists, postController.removeImage);
 
 // Tags

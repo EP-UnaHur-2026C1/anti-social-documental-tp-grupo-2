@@ -2,6 +2,7 @@ const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Tag  = require('../../models/Tag');
 const Comment = require('../../models/Comment');
+const upload = require('../middlewares/upload');
  
 const MONTHS_LIMIT = parseInt(process.env.COMMENT_MONTHS_LIMIT) || 6;
  
@@ -74,7 +75,8 @@ const remove = async (req, res) => {
 // POST /posts/:id/images  — agrega una imagen incrustada
 const addImage = async (req, res) => {
   try {
-    req.post.images.push({ url: req.body.url });
+    const url = `/assets/${req.file.filename}`;
+    req.post.images.push({ url });
     await req.post.save();
     res.status(201).json(req.post.images[req.post.images.length - 1]);
   } catch (e) {
@@ -87,6 +89,7 @@ const removeImage = async (req, res) => {
   try {
     req.image.deleteOne();
     await req.post.save();
+      res.status(204).send();
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
