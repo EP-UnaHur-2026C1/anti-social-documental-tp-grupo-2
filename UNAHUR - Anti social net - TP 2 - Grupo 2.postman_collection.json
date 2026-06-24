@@ -257,52 +257,139 @@
       "name": "Posts",
       "item": [
         {
-          "name": "Create",
+          "name": "Images",
+          "item": [
+            {
+              "name": "AddImage",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "uuid": "fd81b323-05f1-435d-8ffc-fbcae8b6c423",
+                      "src": "/D:/Personal/UNAHUR/estrategias-de-persistencia/anti-social-documental-tp-grupo-2/assets/Referenciada.png"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/images",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "images"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteImage",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/images/6a3bbe47b87a9af6a9d59a3c",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "images",
+                    "6a3bbe47b87a9af6a9d59a3c"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Tags",
+          "item": [
+            {
+              "name": "AddTag",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "tags",
+                    "6a3bbcf6b87a9af6a9d59a3b"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteTag",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "tags",
+                    "6a3bbcf6b87a9af6a9d59a3b"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Delete",
           "request": {
-            "method": "POST",
+            "method": "DELETE",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"nickname\": \"Usuario de prueba actualizado\"\r\n}"
+              "raw": "{\r\n    \"description\": \"Mi primer post editado\"\r\n}"
             },
-            "url": {
-              "raw": "http://localhost:4001/post",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "4001",
-              "path": [
-                "post"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "GetAll",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:4001/posts",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "4001",
-              "path": [
-                "posts"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "GetById",
-          "request": {
-            "method": "GET",
-            "header": [],
             "url": {
               "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583",
               "protocol": "http",
@@ -348,14 +435,10 @@
           "response": []
         },
         {
-          "name": "Delete",
+          "name": "GetById",
           "request": {
-            "method": "DELETE",
+            "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"description\": \"Mi primer post editado\"\r\n}"
-            },
             "url": {
               "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583",
               "protocol": "http",
@@ -372,10 +455,44 @@
           "response": []
         },
         {
-          "name": "AddTag",
+          "name": "GetAll",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4001/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nickname\": \"Usuario de prueba actualizado\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:4001/post",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "post"
+              ]
+            }
           },
           "response": []
         }

@@ -15,9 +15,8 @@ router.delete("/:id", validatePostExists, postController.remove);
 // Imágenes
 router.post('/:id/images', validatePostExists, upload.single('image'), postController.addImage);
 router.delete('/:id/images/:imageId', validatePostExists, validateImageExists, postController.removeImage);
-
 // Tags
-router.post('/:id/tags', validatePostExists, validateTagExists, validateTagNotAssociated, postController.addTag);
+router.post('/:id/tags/:tagId', validatePostExists, validateTagExists, validateTagNotAssociated, postController.addTag);
 router.delete('/:id/tags/:tagId', validatePostExists, validateTagExists, validateTagAssociated, postController.removeTag);
 
 module.exports = router;
