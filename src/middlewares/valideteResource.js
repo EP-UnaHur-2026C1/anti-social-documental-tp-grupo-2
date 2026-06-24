@@ -62,7 +62,7 @@ const validateImageExists = async (req, res, next) => {
 
 const validateTagExists = async (req, res, next) => {
   try {
-    const tag = await Tag.findById(req.params.tagId || req.body.tagId);
+    const tag = await Tag.findById(req.params.id);
     if (!tag) return res.status(404).json({ error: 'Tag no encontrado' });
     req.tag = tag;
     next();
@@ -104,7 +104,6 @@ module.exports = {
   validateUserExists,
   validateFollowedUserExists,
   validateImageExists,
-  validateImageUrl,
   validateTagExists,
   validateTagNotAssociated,
   validateTagAssociated,
