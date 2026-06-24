@@ -1,0 +1,647 @@
+openapi: 3.0.3
+info:
+  title: UnaHur Anti-Social Net API
+  description: Producto Mínimo Viable para la red social "UnaHur Anti-Social Net". Documentación de endpoints CRUD, carga de imágenes y relaciones entre entidades (Usuarios, Posts, Comentarios y Tags).
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de desarrollo
+
+paths:
+  # users routes
+  /users:
+    get:
+      tags: [Users]
+      summary: Obtener todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios obtenida
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags: [Users]
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Error de validación en Joi
+        '409':
+          description: El nickname o email ya está en uso
+
+  /users/{nickname}:
+    get:
+      tags: [Users]
+      summary: Obtener usuario por nickname
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Datos del usuario encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags: [Users]
+      summary: Actualizar datos de un usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Usuario actualizado
+        '409':
+          description: El nickname o email ya está en uso
+    delete:
+      tags: [Users]
+      summary: Eliminar un usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Usuario eliminado correctamente
+
+  /users/{nickname}/followers:
+    get:
+      tags: [Users - Followers]
+      summary: Obtener seguidores de un usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de IDs de seguidores devuelta
+
+  /users/{nickname}/following:
+    get:
+      tags: [Users - Followers]
+      summary: Obtener usuarios seguidos por este usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de IDs de usuarios seguidos
+
+  /users/{nickname}/following/{followedNickname}:
+    post:
+      tags: [Users - Followers]
+      summary: Seguir a un usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: followedNickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Relación de seguimiento creada
+        '400':
+          description: Un usuario no puede seguirse a sí mismo
+        '409':
+          description: Ya seguís a este usuario
+    delete:
+      tags: [Users - Followers]
+      summary: Dejar de seguir a un usuario
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: followedNickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Relación eliminada correctamente
+        '404':
+          description: No seguís a este usuario
+
+  # posts routes
+  /posts:
+    get:
+      tags: [Posts]
+      summary: Obtener todas las publicaciones
+      responses:
+        '200':
+          description: Lista de posts con sus tags y usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+
+  /posts/{nickname}:
+    post:
+      tags: [Posts]
+      summary: Crear publicación
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          description: Nickname del autor
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreate'
+      responses:
+        '201':
+          description: Post creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+  /posts/{id}:
+    get:
+      tags: [Posts]
+      summary: Obtener publicación por ID (incluye comentarios filtrados)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post y sus comentarios válidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+    put:
+      tags: [Posts]
+      summary: Actualizar descripción de un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUpdate'
+      responses:
+        '200':
+          description: Post actualizado
+    delete:
+      tags: [Posts]
+      summary: Eliminar publicación y sus comentarios asociados
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Eliminado sin contenido
+
+  /posts/{id}/images:
+    post:
+      tags: [Posts - Images]
+      summary: Incrustar imagen en un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Imagen subida e incrustada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+
+  /posts/{id}/images/{imageId}:
+    delete:
+      tags: [Posts - Images]
+      summary: Eliminar imagen de un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Imagen eliminada
+
+  /posts/{id}/tags/{tagId}:
+    post:
+      tags: [Posts - Tags]
+      summary: Asociar un tag existente a un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Tag agregado al post
+    delete:
+      tags: [Posts - Tags]
+      summary: Desasociar un tag de un post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Tag removido
+
+  # Comments routes
+  /comments:
+    get:
+      tags: [Comments]
+      summary: Obtener todos los comentarios
+      responses:
+        '200':
+          description: Listado de comentarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+          
+  /comments/{postId}:
+    post:
+      tags: [Comments]
+      summary: Crear un comentario para un post
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreate'
+      responses:
+        '201':
+          description: Comentario creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+
+  /comments/{id}:
+    get:
+      tags: [Comments]
+      summary: Obtener comentario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comentario devuelto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+    put:
+      tags: [Comments]
+      summary: Actualizar contenido del comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentUpdate'
+      responses:
+        '200':
+          description: Comentario modificado
+    delete:
+      tags: [Comments]
+      summary: Eliminar comentario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Comentario borrado
+
+  # Tags routes
+  /tags:
+    get:
+      tags: [Tags]
+      summary: Obtener todos los tags
+      responses:
+        '200':
+          description: Lista de tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+    post:
+      tags: [Tags]
+      summary: Crear nuevo tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreate'
+      responses:
+        '201':
+          description: Tag creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '409':
+          description: El nombre del tag ya existe
+
+  /tags/{id}:
+    get:
+      tags: [Tags]
+      summary: Obtener tag por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tag recuperado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+    put:
+      tags: [Tags]
+      summary: Actualizar nombre de tag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreate'
+      responses:
+        '200':
+          description: Tag actualizado
+        '409':
+          description: El nombre del tag ya existe
+    delete:
+      tags: [Tags]
+      summary: Eliminar tag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Tag eliminado
+
+components:
+  schemas:
+    
+    # Entidades principales
+    
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        nickname:
+          type: string
+        email:
+          type: string
+          format: email
+
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        tags:
+          type: array
+          items:
+            type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    Image:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID autogenerado del subdocumento
+        url:
+          type: string
+          description: Ruta física del archivo guardado en el backend (/assets/...)
+
+    Comment:
+      type: object
+      properties:
+        _id:
+          type: string
+        postId:
+          type: string
+        userId:
+          type: string
+        content:
+          type: string
+
+    Tag:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+
+    
+    # Validaciones Joi
+    
+    UserCreate:
+      type: object
+      required: [nickname, email, password]
+      properties:
+        nickname:
+          type: string
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+          
+    UserUpdate:
+      type: object
+      properties:
+        nickname:
+          type: string
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+
+    PostCreate:
+      type: object
+      required: [description]
+      properties:
+        description:
+          type: string
+          minLength: 1
+
+    PostUpdate:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+
+    CommentCreate:
+      type: object
+      required: [content, userId]
+      properties:
+        content:
+          type: string
+          minLength: 1
+        userId:
+          type: string
+          description: ObjectID hexadecimal de 24 caracteres
+
+    CommentUpdate:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+
+    TagCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
