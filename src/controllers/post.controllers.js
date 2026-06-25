@@ -54,7 +54,7 @@ const update = async (req, res) => {
       { description: req.body.description },
       { new: true, runValidators: true }
     );
-    res.status(200).json(updatedPost);
+    res.status(200).json(req.post);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -66,7 +66,7 @@ const remove = async (req, res) => {
     await Post.findByIdAndDelete(req.post._id);
     // Elimina comentarios asociados al post
     await Comment.deleteMany({ postId: req.post._id });
-    res.status(204).send();
+    res.status(204).json({ message: 'Eliminado si contenido' });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -89,7 +89,7 @@ const removeImage = async (req, res) => {
   try {
     req.image.deleteOne();
     await req.post.save();
-      res.status(204).send();
+      res.status(204).json({ message: 'Imagen eliminada' }).send();
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
@@ -111,7 +111,7 @@ const removeTag = async (req, res) => {
   try {
     req.post.tags = req.post.tags.filter(t => t.toString() !== req.params.tagId);
     await req.post.save();
-    res.status(204).send();
+    res.status(204).json({ message: 'Tag removido' }).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

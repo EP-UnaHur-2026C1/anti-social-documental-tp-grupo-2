@@ -257,6 +257,68 @@
       "name": "Posts",
       "item": [
         {
+          "name": "Tags",
+          "item": [
+            {
+              "name": "AddTag",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "tags",
+                    "6a3bbcf6b87a9af6a9d59a3b"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteTag",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "posts",
+                    "6a39be0f9a41e05978e09583",
+                    "tags",
+                    "6a3bbcf6b87a9af6a9d59a3b"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "Images",
           "item": [
             {
@@ -320,76 +382,29 @@
           ]
         },
         {
-          "name": "Tags",
-          "item": [
-            {
-              "name": "AddTag",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "4001",
-                  "path": [
-                    "posts",
-                    "6a39be0f9a41e05978e09583",
-                    "tags",
-                    "6a3bbcf6b87a9af6a9d59a3b"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "DeleteTag",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583/tags/6a3bbcf6b87a9af6a9d59a3b",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "4001",
-                  "path": [
-                    "posts",
-                    "6a39be0f9a41e05978e09583",
-                    "tags",
-                    "6a3bbcf6b87a9af6a9d59a3b"
-                  ]
-                }
-              },
-              "response": []
+          "name": "GetAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4001/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "posts"
+              ]
             }
-          ]
+          },
+          "response": []
         },
         {
-          "name": "Delete",
+          "name": "GetById",
           "request": {
-            "method": "DELETE",
+            "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"description\": \"Mi primer post editado\"\r\n}"
-            },
             "url": {
               "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583",
               "protocol": "http",
@@ -400,6 +415,29 @@
               "path": [
                 "posts",
                 "6a39be0f9a41e05978e09583"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nickname\": \"Usuario de prueba actualizado\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:4001/post",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "post"
               ]
             }
           },
@@ -435,10 +473,14 @@
           "response": []
         },
         {
-          "name": "GetById",
+          "name": "Delete",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"Mi primer post editado\"\r\n}"
+            },
             "url": {
               "raw": "http://localhost:4001/posts/6a39be0f9a41e05978e09583",
               "protocol": "http",
@@ -453,21 +495,49 @@
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
         {
           "name": "GetAll",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:4001/posts",
+              "raw": "http://localhost:4001/comments",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "4001",
               "path": [
-                "posts"
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4001/comments/6a3d0ccdd1ebba6106a0de50",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "comments",
+                "6a3d0ccdd1ebba6106a0de50"
               ]
             }
           },
@@ -480,17 +550,76 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"nickname\": \"Usuario de prueba actualizado\"\r\n}"
+              "raw": "{\r\n    \"content\": \"Mi segundo comentario\",\r\n    \"userId\": \"6a39bdd89a41e05978e09582\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "http://localhost:4001/post",
+              "raw": "http://localhost:4001/comments/6a39e2f818cf66886b7ab114",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "4001",
               "path": [
-                "post"
+                "comments",
+                "6a39e2f818cf66886b7ab114"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"Mi primer comentario editado\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4001/comments/6a3d0ccdd1ebba6106a0de50",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "comments",
+                "6a3d0ccdd1ebba6106a0de50"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"Mi primer comentario editado\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:4001/comments/6a3d0e00a29fde2411856c58",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4001",
+              "path": [
+                "comments",
+                "6a3d0e00a29fde2411856c58"
               ]
             }
           },

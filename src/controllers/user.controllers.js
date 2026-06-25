@@ -29,7 +29,7 @@ const create = async (req, res) => {
     const { nickname, email, password } = req.body;
     const user = await User.create({ nickname, email, password });
     const { password: _, ...userWithoutPassword } = user.toObject();
-    res.status(201).json(userWithoutPassword);
+    res.status(201).json({ message: 'Usuario creado exitosamente', user: userWithoutPassword });
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'El nickname o email ya está en uso' });
     res.status(500).json({ error: e.message });
@@ -42,7 +42,7 @@ const update = async (req, res) => {
     Object.assign(req.user, req.body);
     await req.user.save();
     const { password, ...userWithoutPassword } = req.user.toObject();
-    res.status(200).json(userWithoutPassword);
+    res.status(200).json({ message: 'Usuario actualizado', user: userWithoutPassword }).send();
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'El nickname o email ya está en uso' });
     res.status(500).json({ error: e.message });
@@ -53,7 +53,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   try {
     await User.deleteOne({ _id: req.user._id });
-    res.status(204).send();
+    res.status(204).json({ message: 'Usuario eliminado correctamente' }).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -78,7 +78,7 @@ const unfollow = async (req, res) => {
   try {
     const deleted = await Follow.findOneAndDelete({ followerId: req.user._id, followedId: req.followed._id });
     if (!deleted) return res.status(404).json({ error: 'No seguís a este usuario' });
-    res.status(204).send();
+    res.status(204).json({ message: 'Relación eliminada correctamente' }).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

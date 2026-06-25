@@ -22,6 +22,18 @@ services:
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://admin:admin1234@mongodb:27017/
       ME_CONFIG_BASICAUTH: "false"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis_data:/data # Para que la caché no se pierda al apagar el contenedor
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     
   api:
     build: ./
@@ -32,6 +44,7 @@ services:
     environment:
       PORT: 3005
       MONGO_URL: mongodb://admin:admin1234@mongodb:27017/myapp?authSource=admin
+      REDIS_URL: redis://redis:6379
     volumes:
       - ./:/app
       - /app/node_modules
