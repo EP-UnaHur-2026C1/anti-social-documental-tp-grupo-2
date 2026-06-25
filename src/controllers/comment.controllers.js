@@ -48,7 +48,7 @@ const update = async (req, res) => {
       { content: req.body.content },
       { new: true, runValidators: true }
     );
-    res.status(200).json(req.comment);
+    res.status(200).json({ message: 'Comentario modificado', comment: req.comment });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -58,7 +58,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   try {
     await Comment.findByIdAndDelete(req.comment._id);
-    res.status(204).send();
+    res.status(204).json({ message: 'Comentario borrado' }).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

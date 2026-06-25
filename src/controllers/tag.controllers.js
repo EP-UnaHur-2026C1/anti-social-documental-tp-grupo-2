@@ -37,7 +37,7 @@ const update = async (req, res) => {
   try {
     Object.assign(req.tag, { name: req.body.name });
     await req.tag.save();
-    res.status(200).json(req.tag);
+    res.status(200).json({ message: 'Tag actualizado', tag: req.tag });
   } catch (e) {
     if (e.code === 11000) return res.status(409).json({ error: 'El nombre del tag ya existe' });
     res.status(500).json({ error: e.message });
@@ -50,7 +50,7 @@ const remove = async (req, res) => {
     await Tag.findByIdAndDelete(req.tag._id);
     // Desasociar el tag de todos los posts que lo tengan
     await Post.updateMany({ tags: req.tag._id }, { $pull: { tags: req.tag._id } });
-    res.status(204).send();
+    res.status(204).json({ message: 'Tag eliminado' }).send();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
