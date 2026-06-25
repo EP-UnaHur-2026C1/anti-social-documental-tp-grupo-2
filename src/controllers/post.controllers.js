@@ -49,12 +49,12 @@ const create = async (req, res) => {
 // PUT /posts/:id
 const update = async (req, res) => {
   try {
-    await Post.findByIdAndUpdate(
+    const updatedPost = await Post.findByIdAndUpdate(
       req.post._id,
       { description: req.body.description },
       { new: true, runValidators: true }
     );
-    res.status(200).json(req.post);
+    res.status(200).json(updatedPost);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

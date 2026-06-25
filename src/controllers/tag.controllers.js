@@ -14,7 +14,7 @@ const getAll = async (req, res) => {
 // GET /tags/:id  — incluye los posts asociados
 const getById = async (req, res) => {
   try {
-    const posts = await Post.find({ tag: req.tag._id }, 'description publishedAt');
+    const posts = await Post.find({ tags: req.tag._id }, 'description publishedAt');
     res.status(200).json({ ...req.tag.toObject(), posts });
   } catch(e) {
     res.status(500).json({ error: e.message });

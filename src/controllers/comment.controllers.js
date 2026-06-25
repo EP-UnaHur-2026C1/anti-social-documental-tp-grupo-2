@@ -43,12 +43,12 @@ const create = async (req, res) => {
 // PUT /comments/:id
 const update = async (req, res) => {
   try {
-    await Comment.findByIdAndUpdate(
+    const updatedComment = await Comment.findByIdAndUpdate(
       req.comment._id,
       { content: req.body.content },
       { new: true, runValidators: true }
     );
-    res.status(200).json(req.comment);
+    res.status(200).json(updatedComment);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

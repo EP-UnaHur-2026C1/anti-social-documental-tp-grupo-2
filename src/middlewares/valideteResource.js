@@ -7,6 +7,7 @@ const validateCommentExists = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ error: 'Comentario no encontrado, prueba cambiando el id' });
+    req.comment = comment;
     next();
   } catch(e) {
     console.error(e);
@@ -62,7 +63,7 @@ const validateImageExists = async (req, res, next) => {
 
 const validateTagExists = async (req, res, next) => {
   try {
-    const tag = await Tag.findById(req.params.tagId);
+    const tag = await Tag.findById(req.params.tagId || req.params.id);
     if (!tag) return res.status(404).json({ error: 'Tag no encontrado' });
     req.tag = tag;
     next();

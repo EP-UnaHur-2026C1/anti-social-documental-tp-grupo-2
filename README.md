@@ -72,3 +72,7 @@ Los sponsors definieron los siguientes nombres y descripciones para las entidade
 - Hace el upload de las imganes que se asocian a un POST que lo guarden en una carpeta de imagenes dentro del servidor web.
 - ¿Cómo modelarías que un usuario pueda "seguir" a otros usuarios, y a su vez ser seguido por muchos? Followers
 - Con la información de los post no varia muy seguido que estrategias podrian utilizar la que la información no sea constantemente consultada desde la base de datos.
+
+# Tests
+
+npx newman run "UNAHUR - Anti social net - TP 2 - Grupo 2 - Tests.postman_collection.json"
