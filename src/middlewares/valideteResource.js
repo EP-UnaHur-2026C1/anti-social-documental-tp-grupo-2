@@ -7,6 +7,7 @@ const validateCommentExists = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ error: 'Comentario no encontrado, prueba cambiando el id' });
+    req.comment = comment;
     next();
   } catch(e) {
     console.error(e);
@@ -16,7 +17,8 @@ const validateCommentExists = async (req, res, next) => {
 
 const validatePostExists = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const postId = req.params.postId || req.params.id; // Soporta tanto /posts/:id como /comments/:postId
+    const post = await Post.findById(postId);
     if (!post) return res.status(404).json({error: 'Post no encontrado, prueba cambiando el id'});
     req.post = post
     next();
