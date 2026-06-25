@@ -509,21 +509,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"content\": \"Mi segundo comentario\",\r\n    \"userId\": \"6a39bdd89a41e05978e09582\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "1234{    \"content\": \"Mi segundo comentario\",    \"userId\": \"6a39bdd89a41e05978e09582\"}",
+              "raw": "http://localhost:4001/comments",
+              "protocol": "http",
               "host": [
-                "1234{    \"content\": \"Mi segundo comentario\",    \"userId\""
+                "localhost"
               ],
-              "port": " \"6a39bdd89a41e05978e09582\"}"
+              "port": "4001",
+              "path": [
+                "comments"
+              ]
             }
           },
           "response": []
