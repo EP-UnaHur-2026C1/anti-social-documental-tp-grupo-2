@@ -11,7 +11,7 @@ redisClient.on('error', (err) => console.log('Redis Client Error:', err));
 redisClient.connect().catch(console.error);
 
 const CACHE_KEY = 'all_tags';
-const CACHE_TTL = 60; // tiempo de vida. cambiar a 24hs al finalizar las pruebas con 86400
+const CACHE_TTL = 86400; // tiempo de vida.
 
 const invalidateCache = async () => {
   try {
